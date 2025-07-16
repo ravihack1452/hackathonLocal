@@ -34,29 +34,27 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, searchQuery, currentLo
     <>
       <header className="bg-gradient-to-r from-sky-200 to-sky-300 sticky top-0 z-50">
         <div className="px-4 py-3">
-          {/* Top row with centered logo and close button */}
-          <div className="flex items-center justify-center mb-3 relative">
+          {/* Logo row with X button */}
+          <div className="flex items-center justify-between mb-4">
+            <div></div> {/* Empty left spacer */}
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-black">
-                amazon <span className="text-blue-500 font-normal italic">now</span>
-              </h1>
-              <div className="w-16 h-0.5 bg-black mx-auto -mt-1"></div>
+              <div className="text-2xl font-bold text-black">
+                amazon <span className="text-blue-600 font-normal italic">now</span>
+              </div>
+              <div className="w-16 h-0.5 bg-black mx-auto"></div>
             </div>
-            <div className="absolute right-0">
-              <X className="h-6 w-6 text-black cursor-pointer" />
-            </div>
+            <X className="h-6 w-6 text-black cursor-pointer" />
           </div>
 
           {/* Delivery info row */}
           <div className="flex items-center mb-4">
-            <div className="bg-yellow-400 text-black px-3 py-1 rounded font-bold text-sm flex items-center mr-3">
+            <div className="bg-yellow-400 text-black px-3 py-1 rounded-md font-bold text-sm mr-3 flex items-center">
               ⚡ 12 mins
             </div>
             <button 
               onClick={() => setShowLocationModal(true)}
               className="flex items-center text-black text-sm font-medium"
             >
-              <MapPin className="h-4 w-4 mr-1" />
               <span>Deliver to Ravi - {currentLocation.split(',')[0]} {currentLocation.match(/\d{6}/)?.[0]}</span>
               <ChevronDown className="h-4 w-4 ml-1" />
             </button>
