@@ -11,7 +11,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onSearch, searchQuery, currentLocation, onLocationChange }) => {
   const [localQuery, setLocalQuery] = useState(searchQuery);
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [newLocation, setNewLocation] = useState(currentLocation);
 
   const locations = [
     { pincode: '560001', area: 'MG Road, Bengaluru', stores: 12 },
@@ -27,7 +26,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, searchQuery, currentLo
   };
 
   const handleLocationChange = (location: string) => {
-    setNewLocation(location);
     onLocationChange(location);
     setShowLocationModal(false);
   };
@@ -36,30 +34,30 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, searchQuery, currentLo
     <>
       <header className="bg-gradient-to-r from-sky-200 to-sky-300 sticky top-0 z-50">
         <div className="px-4 py-3">
-          {/* Top row with logo and close */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex-1"></div>
-            <div className="flex items-center justify-center flex-1">
+          {/* Top row with centered logo and close button */}
+          <div className="flex items-center justify-center mb-3 relative">
+            <div className="text-center">
               <h1 className="text-2xl font-bold text-black">
-                amazon <span className="text-blue-600 font-normal italic">now</span>
+                amazon <span className="text-blue-500 font-normal italic">now</span>
               </h1>
+              <div className="w-16 h-0.5 bg-black mx-auto -mt-1"></div>
             </div>
-            <div className="flex-1 flex justify-end">
-              <X className="h-6 w-6 text-black" />
+            <div className="absolute right-0">
+              <X className="h-6 w-6 text-black cursor-pointer" />
             </div>
           </div>
 
-          {/* Delivery info */}
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-yellow-400 text-black px-3 py-1 rounded-md font-bold text-sm flex items-center mr-3">
+          {/* Delivery info row */}
+          <div className="flex items-center mb-4">
+            <div className="bg-yellow-400 text-black px-3 py-1 rounded font-bold text-sm flex items-center mr-3">
               ⚡ 12 mins
             </div>
             <button 
               onClick={() => setShowLocationModal(true)}
-              className="flex items-center text-black text-sm hover:bg-white/20 px-2 py-1 rounded whitespace-nowrap"
+              className="flex items-center text-black text-sm font-medium"
             >
               <MapPin className="h-4 w-4 mr-1" />
-              <span className="font-medium">Deliver to Ravi - {currentLocation.split(',')[0]}</span>
+              <span>Deliver to Ravi - {currentLocation.split(',')[0]} {currentLocation.match(/\d{6}/)?.[0]}</span>
               <ChevronDown className="h-4 w-4 ml-1" />
             </button>
           </div>
@@ -72,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, searchQuery, currentLo
                 type="text"
                 value={localQuery}
                 onChange={(e) => setLocalQuery(e.target.value)}
-                placeholder="Search for products, stores..."
+                placeholder='Search for "Coffee"'
                 className="w-full pl-10 pr-4 py-3 bg-white rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
