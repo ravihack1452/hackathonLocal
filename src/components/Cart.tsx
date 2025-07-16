@@ -148,12 +148,6 @@ export const Cart: React.FC<CartProps> = ({
                   </div>
                 </div>
 
-                <button
-                  onClick={onCheckout}
-                  className="w-full bg-yellow-400 text-black py-3 rounded-lg font-bold hover:bg-yellow-500"
-                >
-                  Add to Checkout
-                </button>
               </div>
             </div>
           );
