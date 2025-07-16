@@ -35,6 +35,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedStore, setSelectedStore] = useState('');
+  const [currentLocation, setCurrentLocation] = useState('MG Road, Bengaluru 560001');
   const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'payment' | 'tracking'>('home');
   const [sellerCarts, setSellerCarts] = useState<SellerCart[]>([]);
   const [selectedSellerCart, setSelectedSellerCart] = useState<string>('');
@@ -63,6 +64,10 @@ function App() {
     setSelectedCategory('');
     setSelectedStore('');
     setCurrentView('home');
+  };
+
+  const handleLocationChange = (location: string) => {
+    setCurrentLocation(location);
   };
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
@@ -259,7 +264,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header onSearch={handleSearch} searchQuery={searchQuery} />
+      <Header 
+        onSearch={handleSearch} 
+        searchQuery={searchQuery}
+        currentLocation={currentLocation}
+        onLocationChange={handleLocationChange}
+      />
       
       {!searchQuery && !selectedCategory && !selectedStore && (
         <>
@@ -279,7 +289,10 @@ function App() {
               }
             }}
           />
-          <LocalStores onStoreSelect={handleStoreSelect} />
+          <LocalStores 
+            onStoreSelect={handleStoreSelect}
+            currentLocation={currentLocation}
+          />
         </>
       )}
       
