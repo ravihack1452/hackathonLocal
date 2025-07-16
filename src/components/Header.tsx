@@ -38,30 +38,30 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, searchQuery, currentLo
         <div className="px-4 py-3">
           {/* Top row with logo and close */}
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center">
+            <div className="flex-1"></div>
+            <div className="flex items-center justify-center flex-1">
               <h1 className="text-2xl font-bold text-black">
                 amazon <span className="text-blue-600 font-normal italic">now</span>
               </h1>
             </div>
-            <X className="h-6 w-6 text-black" />
+            <div className="flex-1 flex justify-end">
+              <X className="h-6 w-6 text-black" />
+            </div>
           </div>
 
           {/* Delivery info */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-center mb-4">
             <div className="bg-yellow-400 text-black px-3 py-1 rounded-md font-bold text-sm flex items-center mr-3">
               ⚡ 12 mins
             </div>
             <button 
               onClick={() => setShowLocationModal(true)}
-              className="flex items-center text-black text-sm hover:bg-white/20 px-2 py-1 rounded"
+              className="flex items-center text-black text-sm hover:bg-white/20 px-2 py-1 rounded whitespace-nowrap"
             >
               <MapPin className="h-4 w-4 mr-1" />
-              <span className="font-medium">Deliver to Ravi - {currentLocation}</span>
+              <span className="font-medium">Deliver to Ravi - {currentLocation.split(',')[0]}</span>
               <ChevronDown className="h-4 w-4 ml-1" />
             </button>
-            <div className="text-xs text-black/70">
-              Stores within 0.5 km radius
-            </div>
           </div>
 
           {/* Search bar */}
@@ -110,9 +110,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, searchQuery, currentLo
                       <div>
                         <p className="font-medium text-gray-900">{location.area}</p>
                         <p className="text-sm text-gray-600">{location.pincode}</p>
-                      </div>
-                      <div className="text-sm text-green-600 font-medium">
-                        {location.stores} stores
                       </div>
                     </div>
                   </button>
