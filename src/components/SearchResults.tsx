@@ -28,7 +28,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     {
       id: 'search-1',
       name: 'Organic Basmati Rice',
-      store: 'Grocery Mart',
+      store: 'amazon',
       rating: 4.3,
       weight: '1 kg',
       price: 150,
@@ -39,7 +39,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     {
       id: 'search-2',
       name: 'Premium Tea Leaves',
-      store: 'Tea Store',
+      store: 'amazon',
       rating: 4.5,
       weight: '500 g',
       price: 120,
@@ -50,7 +50,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     {
       id: 'search-3',
       name: 'Fresh Vegetables Mix',
-      store: 'Fresh Market',
+      store: 'amazon',
       rating: 4.2,
       weight: '1 kg',
       price: 80,
@@ -61,7 +61,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
     {
       id: 'search-4',
       name: 'Dairy Fresh Milk',
-      store: 'Fresh Dairy',
+      store: 'amazon',
       rating: 4.6,
       weight: '1 L',
       price: 50,

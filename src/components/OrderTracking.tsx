@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Clock, Package, Truck, MapPin, User, Phone } from 'lucide-react';
+import { LiveTrackingMap } from './LiveTrackingMap';
 
 interface OrderTrackingProps {
   orderDetails: any;
@@ -111,30 +112,11 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({
         {/* Delivery Map Placeholder */}
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <h3 className="font-bold text-gray-900 mb-3">Live Tracking</h3>
-          <div className="bg-blue-50 rounded-lg p-6 text-center">
-            <MapPin className="h-12 w-12 text-blue-600 mx-auto mb-2" />
-            <p className="text-blue-800 font-medium">Tracking your deliveries</p>
-            <p className="text-sm text-blue-600 mt-1">
-              {orderDetails.ecoFriendlyDelivery ? 
-                'Single delivery partner collecting from all stores' : 
-                'Multiple delivery partners en route'
-              }
-            </p>
-            <div className="mt-4 flex items-center justify-between text-xs text-blue-600">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
-                Store Locations
-              </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mr-1"></div>
-                Delivery Route
-              </div>
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-red-500 rounded-full mr-1"></div>
-                Your Location
-              </div>
-            </div>
-          </div>
+          <LiveTrackingMap 
+            sellerCarts={orderDetails.sellerCarts}
+            ecoFriendlyDelivery={orderDetails.ecoFriendlyDelivery}
+            deliveryStatuses={orderDetails.ecoFriendlyDelivery ? { eco: ecoDeliveryStatus } : sellerStatuses}
+          />
         </div>
 
         {/* Conditional Tracking Display */}

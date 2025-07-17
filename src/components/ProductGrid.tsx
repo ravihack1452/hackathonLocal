@@ -17,7 +17,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '1',
       name: 'Tata I-Shakti Cooking Soda',
-      store: 'Grocery Store',
+      store: 'amazon',
       rating: 4.2,
       weight: '100 g',
       price: 20,
@@ -28,7 +28,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '2',
       name: 'Aashirvaad Iodized Salt',
-      store: 'Grocery Store',
+      store: 'amazon',
       rating: 4.5,
       weight: '1 kg',
       price: 24,
@@ -39,7 +39,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '3',
       name: 'Tata Iodised Crystal Salt',
-      store: 'Grocery Store',
+      store: 'amazon',
       rating: 4.3,
       weight: '1 kg',
       price: 21,
@@ -50,7 +50,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '4',
       name: 'Tata Himalayan Rock Salt',
-      store: 'Grocery Store',
+      store: 'amazon',
       rating: 4.6,
       weight: '1 kg',
       price: 109,
@@ -61,7 +61,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '5',
       name: 'Vedaka Fenugreek (Methi)',
-      store: 'Spice Market',
+      store: 'amazon',
       rating: 4.1,
       weight: '200 g',
       price: 33,
@@ -72,7 +72,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '6',
       name: 'Vedaka Black Pepper Corn',
-      store: 'Spice Market',
+      store: 'amazon',
       rating: 4.4,
       weight: '100 g',
       price: 114,
@@ -83,7 +83,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '7',
       name: 'Fortune Sunlite Sunflower Oil',
-      store: 'Grocery Store',
+      store: 'amazon',
       rating: 4.3,
       weight: '5 L',
       price: 718,
@@ -94,7 +94,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     {
       id: '8',
       name: 'Sunpure Refined Oil',
-      store: 'Grocery Store',
+      store: 'amazon',
       rating: 4.2,
       weight: '5 L',
       price: 745,
