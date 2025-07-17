@@ -109,121 +109,229 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({
           </div>
         </div>
 
-        {/* Seller-wise Tracking */}
-        {orderDetails.sellerCarts.map((cart: any, index: number) => {
-          const currentStatus = sellerStatuses[cart.sellerId] || 0;
-          const estimatedTime = estimatedTimes[cart.sellerId] || 0;
-          const partner = getDeliveryPartner(index);
-
-          return (
-            <div key={cart.sellerId} className="bg-white rounded-lg p-4 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="font-bold text-gray-900">{cart.sellerName}</h3>
-                  <p className="text-sm text-gray-600">
-                    {cart.items.length} items • {currentStatus === 4 ? 'Delivered!' : `${estimatedTime} mins`}
-                  </p>
-                </div>
-                {estimatedTime > 0 && (
-                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                    {estimatedTime} mins
-                  </div>
-                )}
+        {/* Conditional Tracking Display */}
+        {orderDetails.ecoFriendlyDelivery ? (
+          /* Single Eco-Friendly Tracker */
+          <div className="bg-white rounded-lg p-4 border border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-bold text-gray-900">Eco-Friendly Delivery</h3>
+                <p className="text-sm text-gray-600">
+                  {orderDetails.sellerCarts.length} sellers • {ecoDeliveryStatus === 4 ? 'Delivered!' : `${ecoEstimatedTime} mins`}
+                </p>
               </div>
+              {ecoEstimatedTime > 0 && (
+                <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                  {ecoEstimatedTime} mins
+                </div>
+              )}
+            </div>
 
-              {/* Horizontal Progress Bar */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  {trackingSteps.map((step, stepIndex) => {
-                    const actualIndex = stepIndex;
-                    const IconComponent = step.icon;
-                    const isCompleted = actualIndex <= currentStatus;
-                    const isCurrent = actualIndex === currentStatus;
-                    
-                    return (
-                      <div key={step.id} className="flex flex-col items-center flex-1">
-                        <div className={`flex items-center justify-center w-8 h-8 rounded-full mb-1 ${
-                          isCompleted ? 'bg-green-500' : 'bg-gray-200'
-                        }`}>
-                          <IconComponent className={`h-4 w-4 ${
-                            isCompleted ? 'text-white' : 'text-gray-500'
-                          }`} />
-                        </div>
-                        <h4 className={`text-xs font-medium text-center ${
-                          isCompleted ? 'text-gray-900' : 'text-gray-500'
-                        }`}>
-                          {step.title}
-                        </h4>
-                        {isCurrent && (
-                          <div className="flex items-center space-x-1 mt-1">
-                            <div className="w-1 h-1 bg-blue-500 rounded-full animate-pulse"></div>
-                            <span className="text-xs text-blue-500">Active</span>
-                          </div>
-                        )}
+            {/* Horizontal Progress Bar */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                {ecoTrackingSteps.map((step, stepIndex) => {
+                  const IconComponent = step.icon;
+                  const isCompleted = stepIndex <= ecoDeliveryStatus;
+                  const isCurrent = stepIndex === ecoDeliveryStatus;
+                  
+                  return (
+                    <div key={step.id} className="flex flex-col items-center flex-1">
+                      <div className={`flex items-center justify-center w-8 h-8 rounded-full mb-1 ${
+                        isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                      }`}>
+                        <IconComponent className={`h-4 w-4 ${
+                          isCompleted ? 'text-white' : 'text-gray-500'
+                        }`} />
                       </div>
-                    );
-                  })}
-                </div>
-                
-                {/* Progress Line */}
-                <div className="relative">
-                  <div className="h-1 bg-gray-200 rounded-full mx-4"></div>
-                  <div 
-                    className="absolute top-0 left-4 h-1 bg-green-500 rounded-full transition-all duration-1000"
-                    style={{ 
-                      width: `calc(${(currentStatus / 4) * 100}% - 2rem)` 
-                    }}
-                  ></div>
-                </div>
+                      <h4 className={`text-xs font-medium text-center ${
+                        isCompleted ? 'text-gray-900' : 'text-gray-500'
+                      }`}>
+                        {step.title}
+                      </h4>
+                      {isCurrent && (
+                        <div className="flex items-center space-x-1 mt-1">
+                          <div className="w-1 h-1 bg-blue-500 rounded-full animate-pulse"></div>
+                          <span className="text-xs text-blue-500">Active</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-
-              {/* Delivery Partner */}
-              <div className="bg-gray-50 rounded-lg p-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-600 font-bold text-sm">
-                        {partner.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{partner.name}</h4>
-                      <p className="text-sm text-gray-600">{partner.vehicle} • {partner.phone}</p>
-                    </div>
-                  </div>
-                  <button className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-medium flex items-center space-x-1">
-                    <Phone className="h-3 w-3" />
-                    <span>Call</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Order Items */}
-              <div className="mt-3 pt-3 border-t border-gray-200">
-                <div className="space-y-2">
-                  {cart.items.slice(0, 2).map((item: any) => (
-                    <div key={item.id} className="flex items-center space-x-2">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-8 h-8 object-cover rounded"
-                      />
-                      <span className="text-sm text-gray-600 flex-1">{item.name}</span>
-                      <span className="text-sm font-medium">x{item.quantity}</span>
-                    </div>
-                  ))}
-                  {cart.items.length > 2 && (
-                    <p className="text-sm text-gray-500">+{cart.items.length - 2} more items</p>
-                  )}
-                </div>
+              
+              {/* Progress Line */}
+              <div className="relative">
+                <div className="h-1 bg-gray-200 rounded-full mx-4"></div>
+                <div 
+                  className="absolute top-0 left-4 h-1 bg-green-500 rounded-full transition-all duration-1000"
+                  style={{ 
+                    width: `calc(${(ecoDeliveryStatus / 4) * 100}% - 2rem)` 
+                  }}
+                ></div>
               </div>
             </div>
-          );
-        })}
 
+            {/* Delivery Partner */}
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-blue-600 font-bold text-sm">
+                      {getDeliveryPartner(0).name.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{getDeliveryPartner(0).name}</h4>
+                    <p className="text-sm text-gray-600">{getDeliveryPartner(0).vehicle} • {getDeliveryPartner(0).phone}</p>
+                  </div>
+                </div>
+                <button className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-medium flex items-center space-x-1">
+                  <Phone className="h-3 w-3" />
+                  <span>Call</span>
+                </button>
+              </div>
+            </div>
+
+            {/* All Order Items */}
+            <div className="mt-3 pt-3 border-t border-gray-200">
+              <h4 className="font-medium text-gray-900 mb-2">All Items</h4>
+              <div className="space-y-2">
+                {orderDetails.sellerCarts.map((cart: any) => (
+                  <div key={cart.sellerId}>
+                    <p className="text-sm font-medium text-gray-700 mb-1">{cart.sellerName}</p>
+                    {cart.items.slice(0, 2).map((item: any) => (
+                      <div key={item.id} className="flex items-center space-x-2 ml-2">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-6 h-6 object-cover rounded"
+                        />
+                        <span className="text-xs text-gray-600 flex-1">{item.name}</span>
+                        <span className="text-xs font-medium">x{item.quantity}</span>
+                      </div>
+                    ))}
+                    {cart.items.length > 2 && (
+                      <p className="text-xs text-gray-500 ml-2">+{cart.items.length - 2} more items</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Individual Seller Trackers for Normal Delivery */
+          orderDetails.sellerCarts.map((cart: any, index: number) => {
+            const currentStatus = sellerStatuses[cart.sellerId] || 0;
+            const estimatedTime = estimatedTimes[cart.sellerId] || 0;
+            const partner = getDeliveryPartner(index);
+
+            return (
+              <div key={cart.sellerId} className="bg-white rounded-lg p-4 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="font-bold text-gray-900">{cart.sellerName}</h3>
+                    <p className="text-sm text-gray-600">
+                      {cart.items.length} items • {currentStatus === 4 ? 'Delivered!' : `${estimatedTime} mins`}
+                    </p>
+                  </div>
+                  {estimatedTime > 0 && (
+                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                      {estimatedTime} mins
+                    </div>
+                  )}
+                </div>
+
+                {/* Horizontal Progress Bar */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    {trackingSteps.map((step, stepIndex) => {
+                      const IconComponent = step.icon;
+                      const isCompleted = stepIndex <= currentStatus;
+                      const isCurrent = stepIndex === currentStatus;
+                      
+                      return (
+                        <div key={step.id} className="flex flex-col items-center flex-1">
+                          <div className={`flex items-center justify-center w-8 h-8 rounded-full mb-1 ${
+                            isCompleted ? 'bg-green-500' : 'bg-gray-200'
+                          }`}>
+                            <IconComponent className={`h-4 w-4 ${
+                              isCompleted ? 'text-white' : 'text-gray-500'
+                            }`} />
+                          </div>
+                          <h4 className={`text-xs font-medium text-center ${
+                            isCompleted ? 'text-gray-900' : 'text-gray-500'
+                          }`}>
+                            {step.title}
+                          </h4>
+                          {isCurrent && (
+                            <div className="flex items-center space-x-1 mt-1">
+                              <div className="w-1 h-1 bg-blue-500 rounded-full animate-pulse"></div>
+                              <span className="text-xs text-blue-500">Active</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Progress Line */}
+                  <div className="relative">
+                    <div className="h-1 bg-gray-200 rounded-full mx-4"></div>
+                    <div 
+                      className="absolute top-0 left-4 h-1 bg-green-500 rounded-full transition-all duration-1000"
+                      style={{ 
+                        width: `calc(${(currentStatus / 4) * 100}% - 2rem)` 
+                      }}
+                    ></div>
+                {/* Delivery Partner */}
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span className="text-blue-600 font-bold text-sm">
+                          {partner.name.split(' ').map(n => n[0]).join('')}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">{partner.name}</h4>
+                        <p className="text-sm text-gray-600">{partner.vehicle} • {partner.phone}</p>
+                      </div>
+                    </div>
+                    <button className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-medium flex items-center space-x-1">
+                      <Phone className="h-3 w-3" />
+                      <span>Call</span>
+                    </button>
+                  </div>
+                </div>
+                  </div>
+                {/* Order Items */}
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="space-y-2">
+                    {cart.items.slice(0, 2).map((item: any) => (
+                      <div key={item.id} className="flex items-center space-x-2">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-8 h-8 object-cover rounded"
+                        />
+                        <span className="text-sm text-gray-600 flex-1">{item.name}</span>
+                        <span className="text-sm font-medium">x{item.quantity}</span>
+                      </div>
+                    ))}
+                    {cart.items.length > 2 && (
+                      <p className="text-sm text-gray-500">+{cart.items.length - 2} more items</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+                </div>
         {/* Action Buttons */}
         <div className="space-y-3">
-          {Object.values(sellerStatuses).every(status => status === 4) && (
+          {(orderDetails.ecoFriendlyDelivery ? ecoDeliveryStatus === 4 : Object.values(sellerStatuses).every(status => status === 4)) && (
             <button
               onClick={onBackToHome}
               className="w-full bg-yellow-400 text-black py-3 rounded-lg font-bold hover:bg-yellow-500"

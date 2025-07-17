@@ -106,10 +106,7 @@ export const LocalStores: React.FC<LocalStoresProps> = ({ onStoreSelect, current
   return (
     <div className="px-4 py-6 bg-white">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-gray-900">🏪 Discover Local Stores Near You</h3>
-        <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-          Within 0.5 km
-        </div>
+        <h3 className="text-lg font-bold text-gray-900 whitespace-nowrap">🏪 Discover Local Stores Near You</h3>
       </div>
       <div className="grid grid-cols-2 gap-4">
         {localStores.map((store) => (

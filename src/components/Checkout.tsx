@@ -102,7 +102,7 @@ export const Checkout: React.FC<CheckoutProps> = ({
               <div>
                 <h3 className="font-bold text-green-800">Eco-Friendly Delivery</h3>
                 <p className="text-sm text-green-600">
-                  Single delivery partner picks up from all stores ({getEcoDeliveryTime()})
+                  Single delivery partner picks up from all stores {getEcoDeliveryTime() && `(${getEcoDeliveryTime()})`}
                 </p>
               </div>
             </div>
