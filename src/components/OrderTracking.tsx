@@ -12,11 +12,21 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({
 }) => {
   const [sellerStatuses, setSellerStatuses] = useState<{ [key: string]: number }>({});
   const [estimatedTimes, setEstimatedTimes] = useState<{ [key: string]: number }>({});
+  const [ecoDeliveryStatus, setEcoDeliveryStatus] = useState<number>(0);
+  const [ecoEstimatedTime, setEcoEstimatedTime] = useState<number>(20);
 
   const trackingSteps = [
     { id: 0, title: 'Order Placed', description: 'Your order has been placed', icon: CheckCircle },
     { id: 1, title: 'Seller Accepted', description: 'Seller confirmed your order', icon: User },
     { id: 2, title: 'Preparing', description: 'Store is preparing your order', icon: Package },
+    { id: 3, title: 'Out for Delivery', description: 'Your order is on the way', icon: Truck },
+    { id: 4, title: 'Delivered', description: 'Order delivered successfully', icon: MapPin }
+  ];
+
+  const ecoTrackingSteps = [
+    { id: 0, title: 'Order Placed', description: 'Your order has been placed', icon: CheckCircle },
+    { id: 1, title: 'Collecting', description: 'Partner collecting from stores', icon: Package },
+    { id: 2, title: 'All Collected', description: 'All items collected', icon: User },
     { id: 3, title: 'Out for Delivery', description: 'Your order is on the way', icon: Truck },
     { id: 4, title: 'Delivered', description: 'Order delivered successfully', icon: MapPin }
   ];
@@ -29,40 +39,58 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({
   ];
 
   useEffect(() => {
-    // Initialize seller statuses
-    const initialStatuses: { [key: string]: number } = {};
-    const initialTimes: { [key: string]: number } = {};
-    
-    orderDetails.sellerCarts.forEach((cart: any, index: number) => {
-      // Amazon starts at step 2 (no seller acceptance needed)
-      initialStatuses[cart.sellerId] = cart.sellerId === 'amazon' ? 2 : 0;
-      initialTimes[cart.sellerId] = cart.sellerId === 'amazon' ? 8 : 15;
-    });
-    
-    setSellerStatuses(initialStatuses);
-    setEstimatedTimes(initialTimes);
-
-    // Simulate progress for each seller
-    const timer = setInterval(() => {
-      setSellerStatuses(prev => {
-        const updated = { ...prev };
-        Object.keys(updated).forEach(sellerId => {
-          if (updated[sellerId] < 4) {
-            // Random chance to progress
+    if (orderDetails.ecoFriendlyDelivery) {
+      // Simulate eco-friendly delivery progress
+      const timer = setInterval(() => {
+        setEcoDeliveryStatus(prev => {
+          if (prev < 4) {
             if (Math.random() > 0.7) {
-              updated[sellerId] += 1;
-              setEstimatedTimes(prevTimes => ({
-                ...prevTimes,
-                [sellerId]: updated[sellerId] === 4 ? 0 : Math.max(0, prevTimes[sellerId] - 3)
-              }));
+              const newStatus = prev + 1;
+              setEcoEstimatedTime(newStatus === 4 ? 0 : Math.max(0, ecoEstimatedTime - 5));
+              return newStatus;
             }
           }
+          return prev;
         });
-        return updated;
-      });
-    }, 3000);
+      }, 3000);
 
-    return () => clearInterval(timer);
+      return () => clearInterval(timer);
+    } else {
+      // Initialize seller statuses
+      const initialStatuses: { [key: string]: number } = {};
+      const initialTimes: { [key: string]: number } = {};
+      
+      orderDetails.sellerCarts.forEach((cart: any, index: number) => {
+        // Amazon starts at step 2 (no seller acceptance needed)
+        initialStatuses[cart.sellerId] = cart.sellerId === 'amazon' ? 2 : 0;
+        initialTimes[cart.sellerId] = cart.sellerId === 'amazon' ? 8 : 15;
+      });
+      
+      setSellerStatuses(initialStatuses);
+      setEstimatedTimes(initialTimes);
+
+      // Simulate progress for each seller
+      const timer = setInterval(() => {
+        setSellerStatuses(prev => {
+          const updated = { ...prev };
+          Object.keys(updated).forEach(sellerId => {
+            if (updated[sellerId] < 4) {
+              // Random chance to progress
+              if (Math.random() > 0.7) {
+                updated[sellerId] += 1;
+                setEstimatedTimes(prevTimes => ({
+                  ...prevTimes,
+                  [sellerId]: updated[sellerId] === 4 ? 0 : Math.max(0, prevTimes[sellerId] - 3)
+                }));
+              }
+            }
+          });
+          return updated;
+        });
+      }, 3000);
+
+      return () => clearInterval(timer);
+    }
   }, [orderDetails]);
 
   const getDeliveryPartner = (index: number) => {
@@ -284,6 +312,9 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({
                         width: `calc(${(currentStatus / 4) * 100}% - 2rem)` 
                       }}
                     ></div>
+                  </div>
+                </div>
+
                 {/* Delivery Partner */}
                 <div className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-center justify-between">
@@ -304,7 +335,7 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({
                     </button>
                   </div>
                 </div>
-                  </div>
+
                 {/* Order Items */}
                 <div className="mt-3 pt-3 border-t border-gray-200">
                   <div className="space-y-2">
@@ -328,7 +359,7 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({
             );
           })
         )}
-                </div>
+
         {/* Action Buttons */}
         <div className="space-y-3">
           {(orderDetails.ecoFriendlyDelivery ? ecoDeliveryStatus === 4 : Object.values(sellerStatuses).every(status => status === 4)) && (
